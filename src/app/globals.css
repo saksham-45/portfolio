@@ -19,8 +19,80 @@
   }
 }
 
+@font-face {
+  font-family: 'MATRIX';
+  src: url('/fonts/MATRIX.woff2') format('woff2'),
+       url('/fonts/MATRIX.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'MATRIX', Arial, Helvetica, sans-serif;
+}
+
+.matrix-font {
+  font-family: 'MATRIX', Arial, Helvetica, sans-serif;
+}
+
+.glow-text {
+  color: #00ff41;
+  text-shadow:
+    0 0 5px #00ff41,
+    0 0 10px #00ff41,
+    0 0 20px #00ff41,
+    0 0 40px #00ff41;
+  font-family: 'MATRIX', Arial, Helvetica, sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.pill-btn {
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  min-width: 120px;
+  padding: 0.75em 2em;
+  border: none;
+  border-radius: 999px;
+  font-family: 'MATRIX', Arial, Helvetica, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.18),
+    0 4px 16px rgba(0,0,0,0.10) inset;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+  margin: 0 0.5em;
+}
+
+.pill-btn.red {
+  background: linear-gradient(90deg, #ff1a1a 0%, #d40000 100%);
+  box-shadow:
+    0 2px 8px rgba(255,26,26,0.2),
+    0 4px 16px rgba(255,26,26,0.08) inset;
+}
+.pill-btn.red:hover, .pill-btn.red:focus {
+  background: linear-gradient(90deg, #ff3333 0%, #a80000 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 6px 18px rgba(255,26,26,0.28),
+    0 4px 24px rgba(255,26,26,0.18) inset;
+}
+
+.pill-btn.blue {
+  background: linear-gradient(90deg, #1a8cff 0%, #005cc5 100%);
+  box-shadow:
+    0 2px 8px rgba(26,140,255,0.2),
+    0 4px 16px rgba(26,140,255,0.08) inset;
+}
+.pill-btn.blue:hover, .pill-btn.blue:focus {
+  background: linear-gradient(90deg, #339dff 0%, #003d80 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 6px 18px rgba(26,140,255,0.28),
+    0 4px 24px rgba(26,140,255,0.18) inset;
 }
