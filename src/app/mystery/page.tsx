@@ -33,10 +33,10 @@ const PsychedelicPi: React.FC = () => {
     const b = 5;
   
     function resize() {
-      
+      if (!canvas) return;
       width = window.innerWidth;
       height = window.innerHeight;
-       if (!canvas) return;
+       
       canvas.width = width;
       canvas.height = height;
     }
