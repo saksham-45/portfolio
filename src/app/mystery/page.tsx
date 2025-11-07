@@ -266,14 +266,14 @@ const PsychedelicPi: React.FC = () => {
     let animationFrameId: number;
     let time = 0;
 
-    // Lorenz attractor parameters
-    let sigma = 10;
-    let rho = 28;
-    let beta = 8 / 3;
-    const trailLength = 6000;
-    const dt = 0.002;
+    // Lorenz attractor parameters (shared for all attractors)
+    const sigma = 10;
+    const rho = 28;
+    const beta = 8 / 3;
+    const trailLength = 800; // shorter trails for clarity
+    const dt = 0.008; // slightly faster motion
 
-    // Determine Lorenz attractor's bounding box for scaling
+    // Lorenz bounding box for scaling
     const lorenzBounds = {
       xMin: -30,
       xMax: 30,
@@ -283,33 +283,39 @@ const PsychedelicPi: React.FC = () => {
       zMax: 50
     };
 
-    // Initialize multiple attractors with slightly different initial states
-    const attractorCount = 7;
-    let attractors: {
+    // Number of independent attractors
+    const attractorCount = 4;
+    // Each attractor has its own state and velocity in Lorenz space
+    type Attractor = {
       trail: { x: number; y: number; z: number }[];
       state: { x: number; y: number; z: number };
-    }[] = [];
+      velocity: { x: number; y: number; z: number };
+      bounds: typeof lorenzBounds;
+    };
+    let attractors: Attractor[] = [];
 
+    // Generate unique initial positions and velocities for each attractor
     for (let i = 0; i < attractorCount; i++) {
-      let trail: { x: number; y: number; z: number }[] = [];
-      // Slightly different initial states
-      let state = {
-        x: 0.01 + (Math.random() - 0.5) * 0.02,
-        y: 0 + (Math.random() - 0.5) * 0.02,
-        z: 0 + (Math.random() - 0.5) * 0.02
+      // Spread out starting positions in Lorenz space
+      const x0 = -20 + 40 * (i / (attractorCount - 1));
+      const y0 = -20 + 40 * ((i * 2) % attractorCount) / (attractorCount - 1);
+      const z0 = 10 + 10 * i;
+      // Give each attractor a unique velocity direction (small random perturbation)
+      const vscale = 2.2 + Math.random() * 1.2;
+      const velocity = {
+        x: (Math.random() - 0.5) * vscale,
+        y: (Math.random() - 0.5) * vscale,
+        z: (Math.random() - 0.5) * vscale,
       };
-      for (let j = 0; j < trailLength; j++) {
-        const dx = sigma * (state.y - state.x);
-        const dy = state.x * (rho - state.z) - state.y;
-        const dz = state.x * state.y - beta * state.z;
-        state = {
-          x: state.x + dx * dt,
-          y: state.y + dy * dt,
-          z: state.z + dz * dt,
-        };
-        trail.push({ ...state });
-      }
-      attractors.push({ trail, state });
+      const state = { x: x0, y: y0, z: z0 };
+      // Each attractor gets its own trail
+      const trail = Array(trailLength).fill({ ...state });
+      attractors.push({
+        trail: [...trail],
+        state: { ...state },
+        velocity: { ...velocity },
+        bounds: { ...lorenzBounds }
+      });
     }
 
     function resize() {
@@ -320,6 +326,21 @@ const PsychedelicPi: React.FC = () => {
     }
 
     window.addEventListener('resize', resize);
+
+    // For boundary reflection: returns new value and velocity after bounce
+    function reflect(val: number, vel: number, min: number, max: number): [number, number] {
+      let next = val;
+      let v = vel;
+      if (next < min) {
+        next = min + (min - next); // reflect inside
+        v = Math.abs(v);
+      }
+      if (next > max) {
+        next = max - (next - max);
+        v = -Math.abs(v);
+      }
+      return [next, v];
+    }
 
     function draw() {
       if (!ctx) return;
@@ -353,19 +374,16 @@ const PsychedelicPi: React.FC = () => {
       ctx.shadowBlur = 20;
       ctx.lineWidth = 2.2;
 
-      // Draw each attractor's trail with neon glow and hue cycling offset by index
-      attractors.forEach(({ trail }, index) => {
+      // Draw each attractor independently
+      attractors.forEach((attractor, index) => {
         ctx.beginPath();
-        for (let i = 0; i < trail.length - 1; i++) {
-          // 3D rotation for visual effect (rotate around Y and X)
-          let p = trail[i];
-          let q = trail[i + 1];
-          // Rotate around Y axis (vertical)
+        for (let i = 0; i < attractor.trail.length - 1; i++) {
+          let p = attractor.trail[i];
+          let q = attractor.trail[i + 1];
+          // 3D rotation and projection
           let x1 = cosA * p.x + sinA * p.z;
           let z1 = -sinA * p.x + cosA * p.z;
-          // Rotate around X axis (horizontal)
           let y1 = cosB * p.y - sinB * z1;
-          // Project to 2D, center and scale to fit canvas
           let px = offsetX + x1 * scale;
           let py = offsetY + y1 * scale;
 
@@ -387,19 +405,30 @@ const PsychedelicPi: React.FC = () => {
 
       ctx.restore();
 
-      // Euler step for each attractor, add new point to trail, remove oldest
+      // Advance each attractor independently, with boundary reflection
       attractors.forEach(attractor => {
-        let last = attractor.trail[attractor.trail.length - 1];
-        const dx = sigma * (last.y - last.x);
-        const dy = last.x * (rho - last.z) - last.y;
-        const dz = last.x * last.y - beta * last.z;
-        const next = {
-          x: last.x + dx * dt,
-          y: last.y + dy * dt,
-          z: last.z + dz * dt,
-        };
-        attractor.trail.push(next);
-        attractor.trail.shift();
+        let { x, y, z } = attractor.state;
+        let { x: vx, y: vy, z: vz } = attractor.velocity;
+        // Lorenz derivatives
+        const dx = sigma * (y - x);
+        const dy = x * (rho - z) - y;
+        const dz = x * y - beta * z;
+        // Advance state, add a bit of velocity (to make it independent)
+        let nx = x + dx * dt + vx * dt * 0.14;
+        let ny = y + dy * dt + vy * dt * 0.14;
+        let nz = z + dz * dt + vz * dt * 0.14;
+        // Reflect at boundaries (so attractor stays visible)
+        [nx, vx] = reflect(nx, vx, attractor.bounds.xMin, attractor.bounds.xMax);
+        [ny, vy] = reflect(ny, vy, attractor.bounds.yMin, attractor.bounds.yMax);
+        [nz, vz] = reflect(nz, vz, attractor.bounds.zMin, attractor.bounds.zMax);
+        // Save new state and velocity
+        attractor.state = { x: nx, y: ny, z: nz };
+        attractor.velocity = { x: vx, y: vy, z: vz };
+        // Update trail
+        attractor.trail.push({ x: nx, y: ny, z: nz });
+        if (attractor.trail.length > trailLength) {
+          attractor.trail.shift();
+        }
       });
 
       time += 0.012;

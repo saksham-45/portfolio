@@ -1,127 +1,160 @@
-import React from 'react';
+"use client";
+import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
+
+const MatrixBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = '01'.split('');
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops: number[] = Array(Math.floor(columns)).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00FF00';
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 35);
+    return () => clearInterval(interval);
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10" />;
+};
 
 const AboutPage = () => {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-12">
+    <main className="relative max-w-6xl mx-auto px-6 py-12 text-green-400 font-mono bg-black min-h-screen overflow-hidden">
+      <MatrixBackground />
+
       {/* Header Section */}
-      <header className="flex flex-col items-center text-center mb-16">
-        <h1 className="text-4xl font-bold mb-2">Saksham Srivastava</h1>
-        <p className="text-lg text-white-600 max-w-xl mb-1">
-          Computer Engineering junior focused on AI systems, compiler design, and full-stack development.
-        </p>
-        <p className="text-md text-white mb-1">Tampa, FL</p>
-        <p className="text-md text-white max-w-xl">
-          <a href="mailto:srivastava1@usf.edu" className="text-blue-600 hover:underline">srivastava1@usf.edu</a> |{' '}
-          <a href="https://linkedin.com/in/sakshamsriv" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-            LinkedIn
-          </a> |{' '}
-          <a href="https://github.com/saksham-45" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-            GitHub
-          </a>
+      <header className="flex flex-col items-center text-center mb-16 relative z-10">
+        <h1 className="text-5xl font-extrabold mb-3 text-green-300 drop-shadow-[0_0_10px_#00FF00]">
+          Saksham Srivastava
+        </h1>
+        <p className="text-lg text-green-200 mb-1">Tampa, FL • +1 (813) 860-8506</p>
+        <p className="text-md text-green-300 mb-1">
+          <a href="mailto:saksham146053@gmail.com" className="hover:text-green-500 underline">saksham146053@gmail.com</a> |{' '}
+          <a href="https://linkedin.com/in/sakshamsriv" target="_blank" rel="noopener noreferrer" className="hover:text-green-500 underline">LinkedIn</a> |{' '}
+          <a href="https://github.com/saksham-45" target="_blank" rel="noopener noreferrer" className="hover:text-green-500 underline">GitHub</a> |{' '}
+          <a href="https://saksham-45.github.io/" target="_blank" rel="noopener noreferrer" className="hover:text-green-500 underline">Portfolio</a>
         </p>
       </header>
 
-      {/* Skills Section */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 border-b-2 border-gray-300 pb-2">Skills</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+      {/* Education Section */}
+      <section className="mb-16 relative z-10">
+        <h2 className="text-3xl font-semibold mb-4 border-b border-green-700 pb-2">Education</h2>
+        <div className="text-green-200">
+          <h3 className="text-xl font-bold">University of South Florida, Bellini College of AI</h3>
+          <p>Bachelor of Science in Computer Engineering, Minor in Mathematics (May 2027)</p>
+          <p>Relevant Coursework: Data Structures, Algorithms, OS, Digital Logic, Python & C Program Design</p>
+        </div>
+      </section>
+
+      {/* Skills & Certifications */}
+      <section className="mb-16 relative z-10">
+        <h2 className="text-3xl font-semibold mb-4 border-b border-green-700 pb-2">Skills & Certifications</h2>
+        <div className="grid sm:grid-cols-3 gap-6">
           <div>
             <h3 className="text-xl font-semibold mb-2">Programming</h3>
-            <ul className="text-white-200 list-disc list-inside">
-              <li>Python, C, C++, Java, Dart</li>
-              <li>JavaScript, TypeScript, HTML, CSS</li>
-              <li>Flutter, React, Next.js</li>
+            <ul className="list-disc list-inside text-green-200">
+              <li>Assembly (x86-64, ARM), C++, C#, Python, Bash</li>
             </ul>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">Machine Learning & Data</h3>
-            <ul className="text-white-200 list-disc list-inside">
-              <li>TensorFlow, OpenCV</li>
-              <li>scikit-learn, Pandas, NumPy</li>
-              <li>Computer Vision, NLP, Deep Learning</li>
+            <h3 className="text-xl font-semibold mb-2">Tools</h3>
+            <ul className="list-disc list-inside text-green-200">
+              <li>LLVM, GDB, Wireshark, Burp Suite, Unity3D, Docker, Git</li>
             </ul>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">Systems & Tools</h3>
-            <ul className="text-white-200 list-disc list-inside">
-              <li>Git, Docker, Linux</li>
-              <li>LLVM, Compiler Design</li>
-              <li>Unity3D, C#</li>
+            <h3 className="text-xl font-semibold mb-2">Concepts</h3>
+            <ul className="list-disc list-inside text-green-200">
+              <li>System Design, Embedded Systems, Chip Design, Hardware Security, Optimization, OOP</li>
             </ul>
           </div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 border-b-2 border-gray-300 pb-2">Projects</h2>
+      <section className="mb-16 relative z-10">
+        <h2 className="text-3xl font-semibold mb-4 border-b border-green-700 pb-2">Projects</h2>
         <div className="grid gap-8 sm:grid-cols-2">
-          <div className="border rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-2xl font-semibold mb-2">MoodScope</h3>
-            <p className="text-white-200 mb-4">
-              Developed an AI-based application that detects human emotions through facial expressions using Python, OpenCV, and TensorFlow.
-            </p>
-          </div>
-
-          <div className="border rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-2xl font-semibold mb-2">DSL Compiler</h3>
-            <p className="text-white-200 mb-4">
-              Designed and implemented a domain-specific language compiler using Python and LLVM, focusing on compiler design principles and optimizations.
-            </p>
-          </div>
-
-          <div className="border rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-2xl font-semibold mb-2">Grassland</h3>
-            <p className="text-white-200 mb-4">
-              Created an interactive 3D game environment using Unity3D and C#, showcasing immersive gameplay and dynamic terrain generation.
-            </p>
-          </div>
-
-          <div className="border rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
-            <h3 className="text-2xl font-semibold mb-2">SnackChat</h3>
-            <p className="text-white-200 mb-4">
-              Developed a cross-platform chat application using Flutter and Dart featuring snack-themed emojis and real-time messaging capabilities.
-            </p>
-          </div>
+          {[
+            {
+              name: "MoodScope",
+              desc: "Real-time emotion detection (MTCNN+CNN) with 85% accuracy, 180ms latency. Quantized models for 40% efficiency boost, integrated Llama 3.2-based trend analysis.",
+              tech: "OpenCV, PyQt5, TensorFlow, Metal API, SQLite",
+              link: "https://github.com/saksham-45/moodscope"
+            },
+            {
+              name: "DSL Compiler",
+              desc: "Domain-specific language compiler achieving 5–10% faster symbolic computation than Python. Includes REPL, live plotting, optimized LLVM codegen.",
+              tech: "Llvmlite, NumPy, Matplotlib, Pytest",
+              link: "https://github.com/saksham-45/dsl-compiler"
+            },
+            {
+              name: "YouTube Semantic Search Engine",
+              desc: "Semantic search achieving ~3× better relevance vs keyword search using Sentence Transformers + FAISS. Recall@10 = 0.82, nDCG@10 = 0.79.",
+              tech: "PyTorch, FAISS, WandB, Apple MPS",
+              link: "https://github.com/saksham-45/bettersearchytube"
+            },
+            {
+              name: "SnackChat",
+              desc: "Cross-platform Flutter app for food-themed chats and snaps. Optimized Firestore usage by 20%.",
+              tech: "Flutter, Dart, Firebase, Cloud Messaging",
+              link: "https://github.com/saksham-45/snackchat"
+            },
+          ].map((proj) => (
+            <div key={proj.name} className="border border-green-700 rounded-lg p-6 shadow-lg hover:shadow-green-500/40 transition-all duration-300">
+              <h3 className="text-2xl font-semibold mb-2 text-green-300">{proj.name}</h3>
+              <p className="text-green-200 mb-3">{proj.desc}</p>
+              <p className="text-sm text-green-400 italic mb-2">Tech: {proj.tech}</p>
+              <Link href={proj.link} target="_blank" className="text-green-500 hover:text-green-300 underline">
+                View on GitHub →
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 border-b-2 border-gray-300 pb-2">Experience</h2>
-        <div className="border rounded-lg p-6 shadow">
-          <h3 className="text-2xl font-semibold mb-2">Project Intern</h3>
-          <p className="italic text-white-200 mb-2">Greenpeace India | Sep 2020 – Feb 2021</p>
-          <ul className="list-disc list-inside text-white-200">
-            <li>Researched and analyzed environmental data to support Greenpeace campaigns.</li>
-            <li>Assisted in developing outreach materials to increase public awareness on sustainability.</li>
-            <li>Collaborated with cross-functional teams to organize community engagement events.</li>
+      {/* Experience */}
+      <section className="mb-16 relative z-10">
+        <h2 className="text-3xl font-semibold mb-4 border-b border-green-700 pb-2">Experience</h2>
+        <div className="border border-green-700 rounded-lg p-6 shadow-lg">
+          <h3 className="text-2xl font-semibold mb-2 text-green-300">Project Intern – Greenpeace India</h3>
+          <p className="italic text-green-200 mb-2">Sep 2020 – Feb 2021</p>
+          <ul className="list-disc list-inside text-green-200">
+            <li>Generated 50,000+ petition signatures contributing to environmental policy changes.</li>
+            <li>Developed analytics workflows increasing campaign engagement by 35%.</li>
           </ul>
         </div>
       </section>
 
-      {/* Leadership & Activities Section */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 border-b-2 border-gray-300 pb-2">Leadership & Activities</h2>
-        <div className="border rounded-lg p-6 shadow">
-          <h3 className="text-xl font-semibold mb-2">IEEE Computer Society & Google Developer Student Clubs (GDSC)</h3>
-          <p className="text-white-200">
-            Active member contributing to workshops, hackathons, and tech talks focused on software development, AI, and community building.
-          </p>
-        </div>
-      </section>
-
-      {/* Volunteer & Community Impact Section */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 border-b-2 border-gray-300 pb-2">Volunteer & Community Impact</h2>
-        <div className="border rounded-lg p-6 shadow">
-          <ul className="list-disc list-inside text-gray-200">
-            <li>Organized coding bootcamps for underprivileged youth to promote STEM education.</li>
-            <li>Participated in environmental clean-up drives and awareness campaigns.</li>
-            <li>Mentored junior students in programming and project development.</li>
-          </ul>
-        </div>
-      </section>
+    
     </main>
   );
 };
