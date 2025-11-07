@@ -87,7 +87,15 @@ function PiAnimation() {
   );
 }
 
-function StyledButton({ children, style, onClick }) {
+function StyledButton({
+  children,
+  style,
+  onClick,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}) {
   const [hover, setHover] = useState(false);
   // Inline 3D pill button style, bright gradients, MATRIX font, with hover state
   const baseStyle = {
@@ -102,7 +110,7 @@ function StyledButton({ children, style, onClick }) {
     boxShadow: "0 4px 0 0 rgba(0,0,0,0.25), 0 2px 12px 0 rgba(0,0,0,0.12)",
     color: "#fff",
     letterSpacing: "0.05em",
-    textTransform: "camelCase",
+    textTransform: "none" as React.CSSProperties["textTransform"],
     transition: "all 0.18s cubic-bezier(.4,0,.2,1)",
     // Add a white glow to the text in addition to the neon/green
     textShadow:
