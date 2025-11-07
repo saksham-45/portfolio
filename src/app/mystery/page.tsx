@@ -11,6 +11,8 @@ const PsychedelicPi: React.FC = () => {
     const canvas = canvasRef1.current;
     if (!canvas) return;
 
+    // Null check before using canvas.width or canvas.height
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -29,10 +31,12 @@ const PsychedelicPi: React.FC = () => {
     const points = 1000;
     const a = 5;
     const b = 5;
-
+  
     function resize() {
+      
       width = window.innerWidth;
       height = window.innerHeight;
+       if (!canvas) return;
       canvas.width = width;
       canvas.height = height;
     }
@@ -90,6 +94,8 @@ const PsychedelicPi: React.FC = () => {
     const canvas = canvasRef2.current;
     if (!canvas) return;
 
+    // Null check before using canvas.width or canvas.height
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -111,6 +117,7 @@ const PsychedelicPi: React.FC = () => {
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
+      if (!canvas) return;
       canvas.width = width;
       canvas.height = height;
     }
@@ -164,6 +171,8 @@ const PsychedelicPi: React.FC = () => {
     const canvas = canvasRef3.current;
     if (!canvas) return;
 
+    // Null check before using canvas.width or canvas.height
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -185,6 +194,7 @@ const PsychedelicPi: React.FC = () => {
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
+      if (!canvas) return;
       canvas.width = width;
       canvas.height = height;
     }
@@ -255,6 +265,8 @@ const PsychedelicPi: React.FC = () => {
     const canvas = canvasRef4.current;
     if (!canvas) return;
 
+    // Null check before using canvas.width or canvas.height
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -321,6 +333,7 @@ const PsychedelicPi: React.FC = () => {
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
+      if (!canvas) return;
       canvas.width = width;
       canvas.height = height;
     }
