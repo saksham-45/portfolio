@@ -125,6 +125,7 @@ const PsychedelicPi: React.FC = () => {
     window.addEventListener('resize', resize);
 
     function drawFlower(rFunc: (theta: number) => number, points: number, hueOffset: number) {
+      if (!ctx) return;
       ctx.beginPath();
       for (let i = 0; i <= points; i++) {
         const theta = (i / points) * 2 * Math.PI;
