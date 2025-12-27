@@ -96,7 +96,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
-            className="flex flex-wrap gap-4 justify-center mb-8"
+            className="flex flex-wrap gap-4 justify-center"
           >
             <StyledButton
               href="/about"
@@ -122,25 +122,6 @@ export default function Home() {
             >
               Mystery
             </StyledButton>
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.5 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-green-400 text-sm font-mono flex flex-col items-center gap-2"
-            >
-              <span>Scroll to explore</span>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </motion.div>
           </motion.div>
         </motion.div>
       </main>
