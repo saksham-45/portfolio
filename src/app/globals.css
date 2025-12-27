@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #00ff00;
+  --matrix-green: #00ff00;
+  --matrix-green-dark: #00cc00;
+  --matrix-green-light: #33ff33;
+  --matrix-glow: rgba(0, 255, 0, 0.3);
 }
 
 @theme inline {
@@ -12,17 +16,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 @font-face {
   font-family: 'MATRIX';
-  src: url('/fonts/MATRIX.woff2') format('woff2'),
-       url('/fonts/MATRIX.ttf') format('truetype');
+  src: url('/fonts/Matrix-MZ4P.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -95,4 +91,67 @@ body {
   box-shadow:
     0 6px 18px rgba(26,140,255,0.28),
     0 4px 24px rgba(26,140,255,0.18) inset;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #33ff33;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(0, 255, 0, 0.3);
+  color: #00ff00;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #00ff00;
+  outline-offset: 2px;
+}
+
+/* Animation keyframes */
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+  }
+  50% {
+    text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+  }
+}
+
+@keyframes matrix-fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Utility classes */
+.glow-animate {
+  animation: glow 2s ease-in-out infinite;
 }
